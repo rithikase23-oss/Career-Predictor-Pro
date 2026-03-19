@@ -1,0 +1,2426 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+<title>Advanced AI Career Predictor Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background-image:
+linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.55)),
+url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f");
+background-size:cover;
+background-position:center;
+color:white;
+text-align:center;
+min-height:100vh;
+}
+
+.container{
+display:none;
+padding:30px;
+background:rgba(0,0,0,0.75);
+margin:30px auto;
+width:85%;
+border-radius:12px;
+}
+
+button{
+padding:12px 25px;
+margin:10px;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+background:#00e5ff;
+color:black;
+font-weight:bold;
+}
+
+input,select,textarea{
+padding:10px;
+margin:10px;
+border-radius:6px;
+border:none;
+width:80%;
+}
+
+canvas{
+background:white;
+border-radius:10px;
+margin-top:20px;
+}
+
+#resultBox{
+background:white;
+color:black;
+padding:20px;
+border-radius:10px;
+}
+.dark {
+  background-color: #121212 !important;
+  color: white !important;
+}
+
+.dark input, .dark select, .dark textarea {
+  background-color: #1e1e1e !important;
+  color: white !important;
+}
+
+.dark button {
+  background-color: #00e5ff !important;
+  color: black !important;
+}
+
+.chatbox{
+display:none;
+width:300px;
+background:white;
+color:black;
+position:fixed;
+bottom:80px;
+right:20px;
+border-radius:10px;
+overflow:hidden;
+}
+
+.chat-header{
+background:black;
+color:white;
+padding:10px;
+}
+
+.chat-messages{
+height:200px;
+overflow-y:auto;
+padding:10px;
+}
+
+.chat-input{
+display:flex;
+}
+
+.chat-input input{
+flex:1;
+border:none;
+padding:10px;
+}
+
+#chatToggle{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#00e5ff;
+padding:15px;
+border-radius:50%;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- WELCOME PAGE -->
+
+<div id="welcome" class="container" style="display:block">
+
+<h1 style="font-size:50px">AI Career Predictor Pro</h1>
+
+<h3>"Discover your passion. Build your future."</h3>
+
+<p>
+An intelligent platform that analyzes your interests, skills,
+and academic performance to recommend the best career paths.
+</p>
+
+<button onclick="show('signup')">Signup</button>
+<button onclick="show('login')">Login</button>
+
+</div>
+
+<!-- SIGNUP -->
+
+<div id="signup" class="container">
+
+<h2>Create Account</h2>
+
+<input id="sname" placeholder="Name"><br>
+<input id="semail" placeholder="Email"><br>
+<input id="spass" type="password" placeholder="Password"><br>
+
+<button onclick="signup()">Create Account</button>
+<button onclick="show('welcome')">Back</button>
+
+</div>
+
+<!-- LOGIN -->
+
+<div id="login" class="container">
+
+<h2>Login</h2>
+
+<input id="lemail" placeholder="Email"><br>
+
+<button onclick="sendOTP()">Send OTP</button><br>
+
+<input id="otp" placeholder="Enter OTP"><br>
+
+<button onclick="verifyOTP()">Login</button>
+
+<button onclick="show('welcome')">Back</button>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="container">
+
+<h2>Select Student Type</h2>
+
+<button onclick="show('schoolField')">School Student</button>
+
+<button onclick="show('collegeField')">College Student</button>
+
+<button onclick="show('skillGap')">Skill Gap Analysis</button>
+
+<button onclick="show('futurePlans')">Future Career Planning</button>
+
+<button onclick="showHistory()">Prediction History</button>
+
+</div>
+
+
+<!-- SCHOOL FIELD -->
+
+<div id="schoolField" class="container">
+
+<h2>Select School Field</h2>
+
+<select id="schoolStream">
+<option></option>
+<option>Bio Maths</option>
+<option>Computer Science</option>
+<option>Science</option>
+<option>Commerce</option>
+</select>
+
+<br>
+
+<button onclick="show('schoolAssessment')">Continue</button>
+<button onclick="show('dashboard')">Back</button>
+
+</div>
+
+<!-- SCHOOL ASSESSMENT -->
+
+<div id="schoolAssessment" class="container">
+
+<h2>School Career Assessment</h2>
+
+<input type="number" id="marks" placeholder="12th Marks %"><br>
+
+<p>1. What subject do you enjoy the most?</p>
+<textarea id="q1" placeholder="Example: Biology, Maths, Computer Science"></textarea>
+
+<p>2. Do you enjoy doing experiments or practical work?</p>
+<select id="exp">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>3. Do you enjoy solving logical or analytical problems?</p>
+<select id="prob">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>4. What type of activities excite you the most?</p>
+<textarea id="q2" placeholder="Example: Coding, Drawing, Helping people"></textarea>
+
+<p>5. Do you like learning about new technology?</p>
+<select id="tech">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>6. Do you enjoy helping or caring for people?</p>
+<select id="help">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>7. What problems do you enjoy solving?</p>
+<textarea id="q3"></textarea>
+
+<p>8. Do you like creative activities like drawing or designing?</p>
+<select id="creative">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>9. What career inspires you the most?</p>
+<textarea id="q4"></textarea>
+
+<p>10. Do you enjoy leadership or business related activities?</p>
+<select id="business">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>11. Do you enjoy coding or programming?</p>
+<select id="coding">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>12. What are your hobbies?</p>
+<textarea id="q5"></textarea>
+
+<p>13. Do you enjoy researching new topics?</p>
+<select id="research">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>14. Do you like working with numbers?</p>
+<select id="numbers">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>15. What type of work environment do you prefer?</p>
+<textarea id="q6" placeholder="Office, hospital, lab, outdoor etc"></textarea>
+
+<p>16. Do you like teamwork activities?</p>
+<select id="team">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>17. Do you enjoy solving real life problems?</p>
+<select id="real">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>18. Do you enjoy managing or organizing tasks?</p>
+<select id="manage">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>19. What type of projects do you like building?</p>
+<textarea id="q7"></textarea>
+
+<p>20. Where do you see yourself in the future?</p>
+<textarea id="q8"></textarea>
+
+<button onclick="predictSchool()">Predict Career</button>
+<button onclick="show('schoolField')">Back</button>
+
+</div>
+<!-- COLLEGE FIELD -->
+
+<div id="collegeField" class="container">
+
+<h2>Select College Field</h2>
+
+<select id="collegeStream">
+<option></option>
+<option>Engineering</option>
+<option>Medicine</option>
+<option>Law</option>
+<option>Commerce</option>
+<option>Arts</option>
+</select>
+
+<button onclick="show('collegeAssessment')">Continue</button>
+<button onclick="show('dashboard')">Back</button>
+
+</div>
+
+<!-- COLLEGE ASSESSMENT -->
+
+<div id="collegeAssessment" class="container">
+
+<h2>College Career Assessment</h2>
+
+<p>1. Enter your current CGPA</p>
+<input id="cgpa" placeholder="CGPA"><br>
+
+<p>2. What is your career goal?</p>
+<select id="goal">
+<option></option>
+<option>Job</option>
+<option>Higher Studies</option>
+</select>
+
+<p>3. What is your degree / field of study?</p>
+<textarea id="c1" placeholder="Example: Computer Science, Mechanical, Medicine"></textarea>
+
+<p>4. What technical skills do you have?</p>
+<textarea id="skills" placeholder="Example: Java, Python, Data Analysis"></textarea>
+
+<p>5. Do you enjoy coding?</p>
+<select id="coding">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>6. Do you enjoy data analysis?</p>
+<select id="data">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>7. What type of projects have you worked on?</p>
+<textarea id="c2"></textarea>
+
+<p>8. Do you enjoy research work?</p>
+<select id="research">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>9. What subjects do you enjoy the most in your degree?</p>
+<textarea id="c3"></textarea>
+
+<p>10. Do you like solving complex problems?</p>
+<select id="problem">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>11. Do you enjoy working with teams?</p>
+<select id="team">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>12. Do you enjoy leadership roles?</p>
+<select id="leader">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>13. Do you like business or entrepreneurship?</p>
+<select id="business">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>14. What kind of work environment do you prefer?</p>
+<textarea id="c4" placeholder="Example: Office, Hospital, Startup, Research Lab"></textarea>
+
+<p>15. Do you enjoy creative activities like designing?</p>
+<select id="creative">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>16. Have you completed internships?</p>
+<select id="intern">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>17. What are your biggest strengths?</p>
+<textarea id="c5"></textarea>
+
+<p>18. What type of problems do you enjoy solving?</p>
+<textarea id="c6"></textarea>
+
+<p>19. What are your long-term career goals?</p>
+<textarea id="c7"></textarea>
+
+<p>20. Where do you see yourself in the next 10 years?</p>
+<textarea id="c8"></textarea>
+
+<button onclick="predictCollege()">Predict Career</button>
+<button onclick="show('collegeField')">Back</button>
+</div>
+
+<div id="resumeBuilder" class="container">
+
+<h2>Resume Builder 📄</h2>
+
+<input id="rname" placeholder="Full Name"><br>
+<input id="remail" placeholder="Email"><br>
+<input id="rphone" placeholder="Phone Number"><br>
+
+<p>Education</p>
+<textarea id="reducation" placeholder="Your education details"></textarea>
+
+<p>Skills</p>
+<textarea id="rskills" placeholder="Java, Python, Communication"></textarea>
+
+<p>Projects</p>
+<textarea id="rprojects" placeholder="Project details"></textarea>
+
+<p>Experience</p>
+<textarea id="rexperience" placeholder="Internships / Work"></textarea>
+
+<br>
+
+<button onclick="generateResume()">Generate Resume</button>
+<button onclick="downloadResumePDF()">Download Resume PDF</button>
+<button onclick="show('result')">Back</button>
+
+<br><br>
+
+<div id="resumeOutput"
+style="background:white;color:black;padding:20px;border-radius:10px;">
+</div>
+
+</div>
+<!-- SKILL GAP ANALYSIS -->
+
+<div id="skillGap" class="container">
+
+<h2>Skill Gap Analysis</h2>
+
+<p>1. What career field are you interested in?</p>
+<input type="text" id="careerInterest" placeholder="Example: Software Engineering, Medicine">
+
+<p>2. What technical skills do you currently have?</p>
+<textarea id="currentSkills" placeholder="Example: Python, Communication, Data Analysis"></textarea>
+
+<p>3. What skills do you think you need to improve?</p>
+<textarea id="improveSkills"></textarea>
+
+<p>4. How confident are you in your technical skills?</p>
+<select id="techConfidence">
+<option></option>
+<option>Very Confident</option>
+<option>Confident</option>
+<option>Average</option>
+<option>Not Confident</option>
+</select>
+
+<p>5. Do you have programming skills?</p>
+<select id="programmingSkill">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>6. Do you have communication skills?</p>
+<select id="communicationSkill">
+<option></option>
+<option>Strong</option>
+<option>Average</option>
+<option>Weak</option>
+</select>
+
+<p>7. Do you have leadership skills?</p>
+<select id="leadershipSkill">
+<option></option>
+<option>Strong</option>
+<option>Average</option>
+<option>Weak</option>
+</select>
+
+<p>8. Have you completed any internships?</p>
+<select id="internship">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>9. Do you have project experience?</p>
+<select id="projectExp">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>10. Which skill do you want to learn next?</p>
+<textarea id="nextSkill"></textarea>
+
+<button onclick="analyzeSkillGap()">Analyze Skill Gap</button>
+
+<div id="skillResult" style="margin-top:20px;background:white;color:black;padding:15px;border-radius:8px;"></div>
+<button onclick="show('dashboard')">Back</button>
+</div>
+<!-- FUTURE PLANS -->
+
+<div id="futurePlans" class="container">
+
+<h2>Future Career Planning</h2>
+
+<p>1. What is your short term goal? (1-3 years)</p>
+<textarea id="shortGoal"></textarea>
+
+<p>2. What is your long term goal? (5-10 years)</p>
+<textarea id="longGoal"></textarea>
+
+<p>3. Do you plan to study abroad?</p>
+<select id="abroad">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+<option>Maybe</option>
+</select>
+
+<p>4. Which country are you interested in?</p>
+<input type="text" id="country">
+
+<p>5. Are you planning higher studies?</p>
+<select id="higherStudy">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<p>6. Which degree do you want to pursue?</p>
+<input type="text" id="degree" placeholder="Example: MBA, MS, PhD">
+
+<p>7. Do you want to start a business?</p>
+<select id="startup">
+<option></option>
+<option>Yes</option>
+<option>No</option>
+<option>Maybe</option>
+</select>
+
+<p>8. What industry interests you the most?</p>
+<input type="text" id="industry">
+
+<p>9. What motivates you in your career?</p>
+<textarea id="motivation"></textarea>
+
+<p>10. What challenges do you expect in your career?</p>
+<textarea id="challenges"></textarea>
+<button onclick="analyzeFuturePlans()">Analyze Future Plan</button>
+
+<div id="futureResult" style="margin-top:20px;background:white;color:black;padding:15px;border-radius:8px;"></div>
+<button onclick="show('dashboard')">Back</button>
+</div>
+<!-- RESULT PAGE -->
+
+<div id="result" class="container">
+
+<h2>Your Career Prediction</h2>
+
+<div id="resultBox">
+
+<h3 id="career"></h3>
+
+<p id="salary"></p>
+
+<p id="roadmap"></p>
+
+<canvas id="chart"></canvas>
+
+<div id="recommend"></div>
+
+</div>
+
+<br>
+
+<!-- MAIN ACTION BUTTONS -->
+
+
+
+<button onclick="show('feedback')">Give Feedback</button>
+
+<button onclick="show('dashboard')">Back to Dashboard</button>
+
+
+
+<br><br>
+
+<!-- CAREER TOOLS -->
+<button onclick="motivateUser()">Get Motivation</button>
+
+<button onclick="showCertificates()">Certificate Recommendations</button>
+
+<button onclick="showResources()">Study Resources</button>
+
+<button onclick="showCompanies()">Top Hiring Companies 🏢</button>
+
+<button onclick="showTrendingCareers()">Trending Careers 🔥</button>
+
+<button onclick="showJobs()">Live Job Portal 💼</button>
+
+<button onclick="showInterviewTips()">Interview Tips</button>
+
+<button onclick="analyzeSkillLevel()">Skill Level Analyzer 📊</button>
+
+<button onclick="generateRoadmap()">Generate Career Roadmap</button>
+
+<button onclick="recommendSkills()">Skill Recommendations</button>
+
+<button onclick="showSalary()">Show Salary Range</button>
+
+<button onclick="showColleges()">Best Colleges</button>
+
+<button onclick="jobDemand()">Career Demand</button>
+
+<br><br>
+
+<!-- DISPLAY RESULTS -->
+
+<div id="roadmapResult" 
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="skillSuggest"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="salaryResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="collegeResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="demandResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="jobResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="companyResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="interviewTipsResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="skillLevelResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="trendingResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="certificateResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="resourceResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<div id="motivationBox"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+<div id="motivationResult"
+style="margin-top:15px;background:white;color:black;padding:15px;border-radius:8px;">
+</div>
+
+<br>
+
+
+
+<!-- EXTRA FEATURES -->
+<button onclick="toggleTheme()">Toggle Dark Mode</button>
+
+
+
+<br><br>
+
+<!-- CAREER SEARCH -->
+
+<input id="careerSearch" placeholder="Search career">
+
+<button onclick="searchCareer()">Search</button>
+
+<div id="careerInfo"
+style="margin-top:10px;background:white;color:black;padding:10px;border-radius:8px;">
+</div>
+
+</div>
+<!-- HISTORY -->
+
+<div id="history" class="container">
+
+<h2>Prediction History</h2>
+
+<div id="historyData"></div>
+
+<button onclick="show('dashboard')">Back</button>
+
+</div>
+
+<!-- FEEDBACK -->
+
+<div id="feedback" class="container">
+
+<h2>Website Feedback</h2>
+
+<p>1. Overall experience with the website</p>
+<select id="rating">
+<option></option>
+<option>Excellent</option>
+<option>Good</option>
+<option>Average</option>
+<option>Poor</option>
+</select>
+
+<p>2. How easy was it to use the website?</p>
+<select id="ease">
+<option></option>
+<option>Very Easy</option>
+<option>Easy</option>
+<option>Average</option>
+<option>Difficult</option>
+</select>
+
+<p>3. Was the career prediction helpful?</p>
+<select id="helpful">
+<option></option>
+<option>Very Helpful</option>
+<option>Helpful</option>
+<option>Somewhat Helpful</option>
+<option>Not Helpful</option>
+</select>
+
+<p>4. Were the assessment questions clear?</p>
+<select id="clear">
+<option></option>
+<option>Very Clear</option>
+<option>Clear</option>
+<option>Average</option>
+<option>Confusing</option>
+</select>
+
+<p>5. How accurate do you think the career prediction was?</p>
+<select id="accuracy">
+<option></option>
+<option>Very Accurate</option>
+<option>Accurate</option>
+<option>Average</option>
+<option>Not Accurate</option>
+</select>
+
+<p>6. Did you like the website design?</p>
+<select id="design">
+<option></option>
+<option>Excellent</option>
+<option>Good</option>
+<option>Average</option>
+<option>Poor</option>
+</select>
+
+<p>7. Was the navigation easy?</p>
+<select id="navigation">
+<option></option>
+<option>Very Easy</option>
+<option>Easy</option>
+<option>Average</option>
+<option>Difficult</option>
+</select>
+
+<p>8. Were the career recommendations useful?</p>
+<select id="recommendation">
+<option></option>
+<option>Very Useful</option>
+<option>Useful</option>
+<option>Average</option>
+<option>Not Useful</option>
+</select>
+
+<p>9. Did the website help you understand your career options?</p>
+<select id="careerHelp">
+<option></option>
+<option>Yes</option>
+<option>Somewhat</option>
+<option>No</option>
+</select>
+
+<p>10. Would you recommend this website to your friends?</p>
+<select id="recommendFriend">
+<option></option>
+<option>Yes</option>
+<option>Maybe</option>
+<option>No</option>
+</select>
+
+<p>11. What feature did you like the most?</p>
+<textarea id="f1" placeholder="Example: Career prediction, questions, recommendations"></textarea>
+
+<p>12. What feature should be improved?</p>
+<textarea id="f2"></textarea>
+
+<p>13. What new features would you like to see?</p>
+<textarea id="f3"></textarea>
+
+<p>14. Did you face any technical problems?</p>
+<select id="problem">
+<option></option>
+<option>No Problems</option>
+<option>Minor Issues</option>
+<option>Major Issues</option>
+</select>
+
+<p>15. Additional comments or suggestions</p>
+<textarea id="comments" placeholder="Your comments"></textarea>
+
+<br><br>
+
+<button onclick="submitFeedback()">Submit Feedback</button>
+<button onclick="show('dashboard')">Back</button>
+</div>
+
+<!-- THANK YOU PAGE -->
+
+<div id="thankyou" class="container">
+
+<h2>Thank You For Your Feedback 💙</h2>
+
+<p style="font-size:18px">
+
+"Choose a job you love, and you will never have to work a day in your life."  
+— Confucius
+
+</p>
+
+<button onclick="show('dashboard')">Back to Dashboard</button>
+<button onclick="show('welcome')">Logout</button>
+
+</div>
+
+<!-- CHATBOT -->
+
+<div id="chatToggle" onclick="toggleChat()">💬</div>
+
+<div class="chatbox" id="chatbox">
+
+<div class="chat-header">AI Assistant</div>
+
+<div id="chat" class="chat-messages"></div>
+
+<div class="chat-input">
+<input id="msg">
+<button onclick="chat()">Send</button>
+</div>
+
+</div>
+
+<script>
+
+let otp="";
+let chart;
+
+function show(id){
+
+document.querySelectorAll(".container")
+.forEach(c=>c.style.display="none");
+
+document.getElementById(id).style.display="block";
+
+}
+
+function signup(){
+
+let user={
+name:sname.value,
+email:semail.value,
+pass:spass.value
+}
+
+localStorage.setItem(semail.value,JSON.stringify(user))
+
+alert("Account created")
+
+show("login")
+
+}
+
+function sendOTP(){
+
+otp=Math.floor(100000+Math.random()*900000)
+
+alert("OTP: "+otp)
+
+}
+
+function verifyOTP(){
+
+if(document.getElementById("otp").value==otp){
+
+show("dashboard")
+
+}
+
+else alert("Invalid OTP")
+
+}
+
+function predictSchool(){
+
+let stream=document.getElementById("schoolStream").value;
+let marks=parseFloat(document.getElementById("marks").value);
+
+let tech=document.getElementById("tech").value;
+let help=document.getElementById("help").value;
+let creative=document.getElementById("creative").value;
+let business=document.getElementById("business").value;
+let coding=document.getElementById("coding").value;
+let research=document.getElementById("research").value;
+let numbers=document.getElementById("numbers").value;
+let team=document.getElementById("team").value;
+let manage=document.getElementById("manage").value;
+
+let careers=[];
+
+
+/* STREAM BASED CAREERS */
+
+if(stream==="Bio Maths"){
+
+if(marks>=90){
+careers.push(
+"Doctor",
+"Surgeon",
+"Biomedical Engineer",
+"Medical Researcher",
+"Genetic Scientist",
+"Pharmacist",
+"Biotechnologist"
+);
+}
+
+else if(marks>=75){
+careers.push(
+"Physiotherapist",
+"Nutritionist",
+"BSc Biology",
+"BSc Microbiology",
+"Lab Technician",
+"Clinical Researcher"
+);
+}
+
+else{
+careers.push(
+"Medical Assistant",
+"Healthcare Administrator",
+"Diploma in Nursing",
+"Medical Lab Technician"
+);
+}
+
+}
+
+
+if(stream==="Computer Science"){
+
+if(marks>=90){
+careers.push(
+"Software Engineer",
+"AI Engineer",
+"Machine Learning Engineer",
+"Data Scientist",
+"Cybersecurity Specialist",
+"Cloud Engineer"
+);
+}
+
+else if(marks>=75){
+careers.push(
+"Web Developer",
+"App Developer",
+"Game Developer",
+"UI/UX Designer",
+"System Administrator"
+);
+}
+
+else{
+careers.push(
+"Technical Support Engineer",
+"IT Support Specialist",
+"Freelance Developer"
+);
+}
+
+}
+
+
+if(stream==="Science"){
+
+if(marks>=85){
+careers.push(
+"Scientist",
+"Researcher",
+"Astronomer",
+"Environmental Scientist",
+"Physicist"
+);
+}
+
+else{
+careers.push(
+"Lab Technician",
+"Science Teacher",
+"Research Assistant"
+);
+}
+
+}
+
+
+if(stream==="Commerce"){
+
+if(marks>=90){
+careers.push(
+"Chartered Accountant",
+"Investment Banker",
+"Financial Analyst",
+"Business Consultant",
+"Economist"
+);
+}
+
+else{
+careers.push(
+"Business Analyst",
+"Entrepreneur",
+"Bank Manager",
+"Marketing Manager",
+"Accountant"
+);
+}
+
+}
+
+
+/* INTEREST BASED CAREERS */
+
+if(coding==="Yes"){
+careers.push(
+"Software Developer",
+"Full Stack Developer",
+"Game Programmer"
+);
+}
+
+if(tech==="Yes"){
+careers.push(
+"AI Specialist",
+"Robotics Engineer",
+"Data Engineer"
+);
+}
+
+if(help==="Yes"){
+careers.push(
+"Doctor",
+"Psychologist",
+"Social Worker",
+"Nurse"
+);
+}
+
+if(creative==="Yes"){
+careers.push(
+"Graphic Designer",
+"Animator",
+"Fashion Designer",
+"Film Maker",
+"Content Creator"
+);
+}
+
+if(business==="Yes"){
+careers.push(
+"Startup Founder",
+"Entrepreneur",
+"Business Manager",
+"Digital Marketer"
+);
+}
+
+if(research==="Yes"){
+careers.push(
+"Research Scientist",
+"Data Analyst",
+"Academic Researcher"
+);
+}
+
+if(numbers==="Yes"){
+careers.push(
+"Data Analyst",
+"Statistician",
+"Actuary"
+);
+}
+
+if(team==="Yes"){
+careers.push(
+"Project Manager",
+"Team Lead",
+"Operations Manager"
+);
+}
+
+if(manage==="Yes"){
+careers.push(
+"Business Administrator",
+"Management Consultant",
+"HR Manager"
+);
+}
+
+
+/* REMOVE DUPLICATES */
+
+careers=[...new Set(careers)];
+
+
+/* SHOW RESULT */
+
+showResult(careers);
+
+}
+function predictCollege(){
+
+let stream=document.getElementById("collegeStream").value
+let goal=document.getElementById("goal").value
+let cgpa=parseFloat(document.getElementById("cgpa").value)
+
+let coding=document.getElementById("coding").value
+let data=document.getElementById("data").value
+let research=document.getElementById("research").value
+let leader=document.getElementById("leader").value
+let business=document.getElementById("business").value
+let creative=document.getElementById("creative").value
+let intern=document.getElementById("intern").value
+
+let skills=document.getElementById("skills").value.toLowerCase()
+
+let careers=[]
+let rec=""
+
+
+
+
+/* ENGINEERING */
+
+if(stream==="Engineering"){
+
+careers=[
+"Software Engineer",
+"AI Engineer",
+"Cloud Engineer",
+"Data Engineer",
+"Cybersecurity Specialist",
+"DevOps Engineer",
+"Machine Learning Engineer",
+"Blockchain Developer"
+]
+
+if(coding==="Yes"){
+careers.push("Full Stack Developer","Mobile App Developer")
+}
+
+if(data==="Yes"){
+careers.push("Data Scientist","Data Analyst","Business Intelligence Engineer")
+}
+
+if(research==="Yes"){
+careers.push("Research Engineer","Robotics Engineer")
+}
+
+if(creative==="Yes"){
+careers.push("UI/UX Designer","Game Developer")
+}
+
+if(intern==="Yes"){
+careers.push("Product Engineer","Technical Consultant")
+}
+
+if(cgpa>=8){
+careers.push("AI Research Scientist","Systems Architect")
+}
+
+}
+
+
+
+
+/* MEDICINE */
+
+if(stream==="Medicine"){
+
+careers=[
+"Doctor",
+"Surgeon",
+"Medical Researcher",
+"Public Health Specialist",
+"Pharmacologist",
+"Biomedical Scientist"
+]
+
+if(research==="Yes"){
+careers.push("Clinical Researcher","Medical Scientist")
+}
+
+if(leader==="Yes"){
+careers.push("Hospital Administrator","Health Policy Advisor")
+}
+
+if(cgpa>=8){
+careers.push("Specialist Doctor","Neurosurgeon")
+}
+
+}
+
+
+
+
+/* LAW */
+
+if(stream==="Law"){
+
+careers=[
+"Lawyer",
+"Corporate Lawyer",
+"Judge",
+"Legal Advisor",
+"Public Prosecutor"
+]
+
+if(business==="Yes"){
+careers.push("Corporate Legal Consultant","Business Lawyer")
+}
+
+if(leader==="Yes"){
+careers.push("Legal Manager","Policy Advisor")
+}
+
+if(research==="Yes"){
+careers.push("Legal Researcher","Constitutional Expert")
+}
+
+}
+
+
+
+
+/* COMMERCE */
+
+if(stream==="Commerce"){
+
+careers=[
+"Chartered Accountant",
+"Financial Analyst",
+"Investment Banker",
+"Business Analyst",
+"Tax Consultant"
+]
+
+if(business==="Yes"){
+careers.push("Entrepreneur","Startup Founder","Business Consultant")
+}
+
+if(data==="Yes"){
+careers.push("Financial Data Analyst","Risk Analyst")
+}
+
+if(leader==="Yes"){
+careers.push("Corporate Manager","Operations Manager")
+}
+
+}
+
+
+
+
+/* ARTS */
+
+if(stream==="Arts"){
+
+careers=[
+"Journalist",
+"Psychologist",
+"Professor",
+"Writer",
+"Content Creator"
+]
+
+if(creative==="Yes"){
+careers.push("Graphic Designer","Film Maker","Creative Director")
+}
+
+if(research==="Yes"){
+careers.push("Social Researcher","Historian","Sociologist")
+}
+
+if(leader==="Yes"){
+careers.push("NGO Leader","Public Policy Analyst")
+}
+
+}
+
+
+
+
+/* JOB OR HIGHER STUDIES */
+
+if(goal==="Job"){
+
+rec=`
+<h3>Recommended Job Platforms</h3>
+LinkedIn<br>
+Naukri<br>
+Indeed<br>
+Glassdoor<br>
+Internshala<br>
+AngelList (Startups)<br>
+Monster Jobs
+`
+
+}
+
+else{
+
+rec=`
+<h3>Top Universities for Higher Studies</h3>
+IIT Madras<br>
+IISc Bangalore<br>
+MIT<br>
+Stanford University<br>
+Oxford University<br>
+Harvard University<br>
+National University of Singapore
+`
+
+}
+
+
+
+
+showResult(careers)
+
+document.getElementById("recommend").innerHTML=rec
+
+}
+
+function generateRoadmap() {
+  let career = document.getElementById("career").innerText; // Correct ID
+  let roadmap = "";
+
+  if (career.includes("Software")) {
+    roadmap = "1. Learn Programming (Java/Python)<br>\
+2. Study Data Structures & Algorithms<br>\
+3. Learn Web Development<br>\
+4. Build real projects<br>\
+5. Apply for software internships";
+  } else if (career.includes("AI")) {
+    roadmap = "1. Learn Python<br>\
+2. Study Machine Learning<br>\
+3. Work on AI projects<br>\
+4. Learn Deep Learning<br>\
+5. Apply for AI Engineer roles";
+  } else {
+    roadmap = "1. Identify required skills<br>\
+2. Take certifications<br>\
+3. Build projects<br>\
+4. Do internships<br>\
+5. Apply for jobs";
+  }
+
+  document.getElementById("roadmapResult").innerHTML = "<h3>Career Roadmap</h3>" + roadmap;
+}
+
+function showResult(careers){
+
+let score=Math.floor(Math.random()*30)+70
+
+document.getElementById("career").innerHTML="Careers: "+careers.join(", ")
+
+let salary=""
+
+if(score>90) salary="Estimated Salary: 20LPA+"
+else if(score>80) salary="Estimated Salary: 12LPA"
+else salary="Estimated Salary: 6LPA"
+
+document.getElementById("salary").innerHTML=salary
+
+document.getElementById("roadmap").innerHTML=
+"Roadmap: Learn skills → Build projects → Internships → Certifications → Apply Jobs"
+
+let ctx=document.getElementById("chart")
+
+if(chart) chart.destroy()
+
+chart=new Chart(ctx,{
+type:"bar",
+data:{
+labels:["Career Score"],
+datasets:[{data:[score]}]
+}
+})
+
+saveHistory(careers,score)
+
+show("result")
+
+}
+
+function saveHistory(career,score){
+
+let history=JSON.parse(localStorage.getItem("history")||"[]")
+
+history.push({
+career:career.join(", "),
+score:score,
+date:new Date().toLocaleString()
+})
+
+localStorage.setItem("history",JSON.stringify(history))
+
+}
+function recommendSkills(){
+
+let result="Recommended Skills:<br>\
+✔ Programming (Java/Python)<br>\
+✔ Communication Skills<br>\
+✔ Problem Solving<br>\
+✔ Project Development<br>\
+✔ Internship Experience";
+
+document.getElementById("skillSuggest").innerHTML=result;
+
+}
+function showSalary() {
+  let career = document.getElementById("career").innerText;
+  let salary = "";
+
+  if(career.toLowerCase().includes("software"))
+      salary = "₹6L - ₹12L per year";
+  else if(career.toLowerCase().includes("ai"))
+      salary = "₹8L - ₹20L per year";
+  else if(career.toLowerCase().includes("data"))
+      salary = "₹7L - ₹18L per year";
+  else
+      salary = "₹4L - ₹10L per year";
+
+  document.getElementById("salaryResult").innerHTML = "<h3>Average Salary:</h3>" + salary;
+}
+function showColleges(){
+
+let colleges="Top Colleges:<br>\
+IIT Madras<br>\
+NIT Trichy<br>\
+Anna University<br>\
+VIT University<br>\
+BITS Pilani";
+
+document.getElementById("collegeResult").innerHTML=colleges;
+
+}
+function jobDemand(){
+
+let demand="🔥 High Demand Careers:<br>\
+AI Engineer<br>\
+Data Scientist<br>\
+Cyber Security Expert<br>\
+Cloud Engineer";
+
+document.getElementById("demandResult").innerHTML=demand;
+
+}
+function toggleTheme(){
+
+document.body.classList.toggle("dark");
+
+}
+function motivate(){
+
+let quotes=[
+"Success comes from consistent learning.",
+"Never stop improving your skills.",
+"Small progress every day leads to big success.",
+"Build projects and believe in yourself."
+];
+
+let random=quotes[Math.floor(Math.random()*quotes.length)];
+
+document.getElementById("motivation").innerHTML=random;
+
+}
+function searchCareer(){
+
+let career=document.getElementById("careerSearch").value.toLowerCase();
+
+if(career=="ai")
+document.getElementById("careerInfo").innerHTML="AI Engineers build intelligent systems.";
+
+else if(career=="doctor")
+document.getElementById("careerInfo").innerHTML="Doctors diagnose and treat diseases.";
+
+else
+document.getElementById("careerInfo").innerHTML="Career information not found.";
+
+}
+
+function showHistory(){
+
+let history=JSON.parse(localStorage.getItem("history")||"[]")
+
+let html=""
+
+history.forEach(h=>{
+html+=h.date+" : "+h.career+" ("+h.score+")<br>"
+})
+
+document.getElementById("historyData").innerHTML=html
+
+show("history")
+
+}
+
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  let y = 20;
+
+  doc.setFontSize(18);
+  doc.text("AI Career Predictor Report", 20, y);
+
+  y += 10;
+  doc.setFontSize(12);
+
+  const careerText = document.getElementById("career").innerText || "No career info";
+  const salaryText = document.getElementById("salary").innerText || "No salary info";
+  const roadmapText = document.getElementById("roadmap").innerText || "No roadmap info";
+
+  const skillText = document.getElementById("skillSuggest").innerText || "";
+  const collegeText = document.getElementById("collegeResult").innerText || "";
+
+  // Function to handle long text wrapping
+  function addText(text) {
+    let lines = doc.splitTextToSize(text, 170);
+    doc.text(lines, 20, y);
+    y += lines.length * 7;
+  }
+
+  addText("Career: " + careerText);
+  addText("Salary: " + salaryText);
+  addText("Roadmap: " + roadmapText);
+
+  if(skillText) addText("Skills: " + skillText);
+  if(collegeText) addText("Top Colleges: " + collegeText);
+
+  doc.save("career_report.pdf");
+}
+
+function analyzeSkillGap(){
+
+let career=document.getElementById("careerInterest").value.toLowerCase()
+let techConfidence=document.getElementById("techConfidence").value
+let programming=document.getElementById("programmingSkill").value
+let communication=document.getElementById("communicationSkill").value
+let leadership=document.getElementById("leadershipSkill").value
+let internship=document.getElementById("internship").value
+let project=document.getElementById("projectExp").value
+let nextSkill=document.getElementById("nextSkill").value
+
+let result="<h3>Skill Gap Analysis Result</h3>Recommended Skills To Learn:<br><br>"
+
+
+/* BASIC SKILLS */
+
+if(programming==="No"){
+result+="• Programming / Coding (Python, Java, C++)<br>"
+}
+
+if(communication==="Weak"){
+result+="• Communication & Public Speaking Skills<br>"
+}
+
+if(leadership==="Weak"){
+result+="• Leadership & Team Management Skills<br>"
+}
+
+if(internship==="No"){
+result+="• Industry Internship Experience<br>"
+}
+
+if(project==="No"){
+result+="• Real-world Project Development Experience<br>"
+}
+
+if(techConfidence==="Not Confident"){
+result+="• Technical Practice and Skill Improvement<br>"
+}
+
+
+/* CAREER SPECIFIC SKILLS */
+
+if(career.includes("software") || career.includes("engineer")){
+result+="<br><b>Recommended Technical Skills for Software Field:</b><br>"
+result+="• Data Structures & Algorithms<br>"
+result+="• Web Development (HTML, CSS, JavaScript)<br>"
+result+="• Cloud Computing (AWS / Azure)<br>"
+result+="• Git & Version Control<br>"
+}
+
+if(career.includes("data")){
+result+="<br><b>Recommended Skills for Data Careers:</b><br>"
+result+="• Python / R Programming<br>"
+result+="• Data Visualization<br>"
+result+="• Machine Learning Basics<br>"
+result+="• SQL & Database Management<br>"
+}
+
+if(career.includes("doctor") || career.includes("medical")){
+result+="<br><b>Recommended Skills for Medical Field:</b><br>"
+result+="• Medical Research Skills<br>"
+result+="• Clinical Knowledge Development<br>"
+result+="• Patient Communication Skills<br>"
+}
+
+if(career.includes("business") || career.includes("entrepreneur")){
+result+="<br><b>Recommended Skills for Business Careers:</b><br>"
+result+="• Financial Management<br>"
+result+="• Marketing Strategy<br>"
+result+="• Leadership & Decision Making<br>"
+}
+
+
+/* NEXT SKILL GOAL */
+
+if(nextSkill!==""){
+result+="<br><b>Your Next Skill Goal:</b> "+nextSkill+"<br>"
+}
+
+document.getElementById("skillResult").innerHTML=result
+
+}
+
+
+
+
+
+
+
+function analyzeFuturePlans(){
+
+let shortGoal=document.getElementById("shortGoal").value
+let longGoal=document.getElementById("longGoal").value
+let abroad=document.getElementById("abroad").value
+let country=document.getElementById("country").value
+let higherStudy=document.getElementById("higherStudy").value
+let degree=document.getElementById("degree").value
+let startup=document.getElementById("startup").value
+let industry=document.getElementById("industry").value
+let motivation=document.getElementById("motivation").value
+let challenges=document.getElementById("challenges").value
+
+let result="<h3>Future Career Plan Analysis</h3><br>"
+
+
+/* SHORT TERM */
+
+if(shortGoal!==""){
+result+="<b>Short Term Goal:</b> "+shortGoal+"<br><br>"
+}
+
+
+/* LONG TERM */
+
+if(longGoal!==""){
+result+="<b>Long Term Goal:</b> "+longGoal+"<br><br>"
+}
+
+
+/* HIGHER STUDIES */
+
+if(higherStudy==="Yes"){
+result+="<b>Higher Study Recommendation:</b><br>"
+result+="• Prepare for entrance exams (GRE / GATE / CAT etc.)<br>"
+result+="• Build strong academic profile<br>"
+result+="• Research top universities<br><br>"
+}
+
+
+/* STUDY ABROAD */
+
+if(abroad==="Yes"){
+result+="<b>Study Abroad Guidance:</b><br>"
+result+="• Prepare for IELTS / TOEFL<br>"
+result+="• Apply for scholarships<br>"
+result+="• Research universities in "+country+"<br><br>"
+}
+
+
+/* DEGREE PLAN */
+
+if(degree!==""){
+result+="<b>Planned Degree:</b> "+degree+"<br><br>"
+}
+
+
+/* STARTUP */
+
+if(startup==="Yes"){
+result+="<b>Entrepreneurship Advice:</b><br>"
+result+="• Learn business strategy<br>"
+result+="• Develop startup idea<br>"
+result+="• Study funding and investors<br><br>"
+}
+
+
+/* INDUSTRY */
+
+if(industry!==""){
+result+="<b>Target Industry:</b> "+industry+"<br><br>"
+}
+
+
+/* MOTIVATION */
+
+if(motivation!==""){
+result+="<b>Career Motivation:</b> "+motivation+"<br><br>"
+}
+
+
+/* CHALLENGES */
+
+if(challenges!==""){
+result+="<b>Possible Challenges:</b> "+challenges+"<br>"
+result+="• Develop strong planning to overcome these challenges.<br>"
+}
+
+
+document.getElementById("futureResult").innerHTML=result
+}
+
+function submitFeedback(){
+
+alert("Thank you for your feedback!")
+
+show("thankyou")
+
+}
+
+function toggleChat(){
+
+let c=document.getElementById("chatbox")
+
+c.style.display=c.style.display=="block"?"none":"block"
+
+}
+
+function chat(){
+
+let msg=document.getElementById("msg").value
+
+let chat=document.getElementById("chat")
+
+chat.innerHTML+="<b>You:</b> "+msg+"<br>"
+
+chat.innerHTML+="<b>AI:</b> "+getAI(msg)+"<br>"
+
+chat.scrollTop=chat.scrollHeight
+
+document.getElementById("msg").value=""
+
+}
+
+function getAI(msg){
+
+msg = msg.toLowerCase();
+
+if(msg.includes("coding"))
+return "Practice coding daily using platforms like LeetCode, HackerRank, and CodeChef. Start with Data Structures and Algorithms.";
+
+if(msg.includes("ai"))
+return "AI requires Python, Machine Learning, Deep Learning, and projects using TensorFlow or PyTorch.";
+
+if(msg.includes("data"))
+return "For Data Science learn Python, Statistics, SQL, Pandas, NumPy, and Machine Learning.";
+
+if(msg.includes("mba"))
+return "MBA helps in management, leadership, marketing, finance and entrepreneurship.";
+
+if(msg.includes("doctor") || msg.includes("medical"))
+return "Focus on Biology, Chemistry, and prepare for NEET to enter medical colleges.";
+
+if(msg.includes("law"))
+return "Prepare for CLAT exam and study legal reasoning, GK, and English.";
+
+if(msg.includes("startup") || msg.includes("business"))
+return "Start with solving real problems, build a small MVP, and learn marketing and finance.";
+
+if(msg.includes("internship"))
+return "Internships provide industry experience. Apply through LinkedIn, Internshala, and company websites.";
+
+if(msg.includes("resume"))
+return "Keep your resume short, highlight skills, projects, achievements, and internships.";
+
+if(msg.includes("software"))
+return "To become a Software Engineer learn Java/Python, DSA, Web Development, and build projects.";
+
+if(msg.includes("web development"))
+return "Learn HTML, CSS, JavaScript, React, and backend like Node.js or Java.";
+
+if(msg.includes("cyber security"))
+return "Cyber Security requires networking, Linux, ethical hacking, and security tools.";
+
+if(msg.includes("cloud"))
+return "Learn AWS, Azure, Docker, Kubernetes and cloud architecture.";
+
+if(msg.includes("which course") || msg.includes("what should i study"))
+return "Choose a course based on your interest. Popular options include Computer Science, AI, Data Science, Business, Medicine, or Law.";
+
+if(msg.includes("what should i pursue next") || msg.includes("next step"))
+return "First identify your interests and strengths. If you like technology pursue Computer Science or AI. If you enjoy biology pursue medicine. If you like business choose MBA or entrepreneurship.";
+
+if(msg.includes("career roadmap"))
+return "Career roadmap: 1️⃣ Learn skills → 2️⃣ Build projects → 3️⃣ Do internships → 4️⃣ Build portfolio → 5️⃣ Apply for jobs.";
+
+if(msg.includes("how to improve skills"))
+return "Improve skills by practicing daily, building projects, joining hackathons, and taking online courses.";
+
+if(msg.includes("best career"))
+return "The best career depends on your interests. Popular careers include Software Engineer, AI Engineer, Doctor, Data Scientist, Lawyer, and Entrepreneur.";
+
+if(msg.includes("future jobs"))
+return "Future jobs include AI Engineer, Data Scientist, Cyber Security Expert, Cloud Engineer, and Robotics Engineer.";
+
+if(msg.includes("ai career"))
+return "Start with Python, Mathematics, Machine Learning, and build AI projects like chatbots or prediction models.";
+
+if(msg.includes("data analyst"))
+return "Learn Excel, SQL, Python, Power BI or Tableau for data visualization.";
+
+if(msg.includes("machine learning"))
+return "Machine Learning requires Python, statistics, algorithms, and model building using libraries like Scikit-learn.";
+
+return "You can ask me about careers, coding, AI, internships, resume, courses, or what to pursue next.";
+
+}
+function motivateUser(){
+
+let quotes=[
+"🔥 Believe in yourself and all that you are.",
+"🚀 Your future is created by what you do today.",
+"💡 Success doesn't come from comfort zones.",
+"📈 Small daily improvements lead to big success.",
+"🎯 Stay focused and never give up.",
+"💻 Build skills, not excuses."
+];
+
+let random=quotes[Math.floor(Math.random()*quotes.length)];
+
+document.getElementById("motivationBox").innerHTML="<h3>Motivation</h3>"+random;
+
+}
+
+function showCertificates(){
+
+let career = document.getElementById("career").innerText.toLowerCase();
+let result = "<h3>Recommended Certifications 📜</h3>";
+
+/* SOFTWARE / IT */
+if(career.includes("software") || career.includes("developer")){
+result += `
+✔ Java Programming – Coursera / Udemy<br>
+✔ Web Development Bootcamp<br>
+✔ Data Structures & Algorithms<br>
+✔ Full Stack Development<br>
+✔ Git & GitHub Certification<br>
+`;
+}
+
+/* AI / DATA */
+else if(career.includes("ai") || career.includes("data")){
+result += `
+✔ Machine Learning – Coursera (Andrew Ng)<br>
+✔ Data Science Certification<br>
+✔ Python for Data Analysis<br>
+✔ Deep Learning Specialization<br>
+✔ SQL Certification<br>
+`;
+}
+
+/* MEDICAL */
+else if(career.includes("doctor") || career.includes("medical")){
+result += `
+✔ Basic Life Support (BLS)<br>
+✔ Medical Research Certification<br>
+✔ Clinical Practice Training<br>
+✔ Healthcare Management Course<br>
+`;
+}
+
+/* BUSINESS */
+else if(career.includes("business") || career.includes("manager")){
+result += `
+✔ Digital Marketing Certification<br>
+✔ Business Analytics<br>
+✔ Financial Management Course<br>
+✔ Entrepreneurship Program<br>
+`;
+}
+
+/* DEFAULT */
+else{
+result += `
+✔ Communication Skills<br>
+✔ Leadership Training<br>
+✔ Career Development Course<br>
+✔ Project Management Basics<br>
+`;
+}
+
+document.getElementById("certificateResult").innerHTML = result;
+
+}
+function showResources(){
+
+let careerElement = document.getElementById("career");
+
+if(!careerElement){
+alert("Career not found. Please predict career first.");
+return;
+}
+
+let career = careerElement.innerText.toLowerCase();
+
+let res="<h3>Learning Resources 📚</h3>";
+
+/* SOFTWARE */
+if(career.includes("software") || career.includes("developer")){
+res += `
+<b>Platforms:</b><br>
+• LeetCode<br>
+• HackerRank<br>
+• CodeChef<br><br>
+
+<b>Courses:</b><br>
+• Web Development Bootcamp<br>
+• Java / Python Programming<br><br>
+
+<b>YouTube:</b><br>
+• CodeWithHarry<br>
+• Apna College<br>
+`;
+}
+
+/* AI / DATA */
+else if(career.includes("ai") || career.includes("data")){
+res += `
+<b>Platforms:</b><br>
+• Kaggle<br>
+• Coursera<br><br>
+
+<b>Courses:</b><br>
+• Machine Learning – Andrew Ng<br>
+• Data Science Course<br><br>
+
+<b>YouTube:</b><br>
+• Krish Naik<br>
+• Simplilearn<br>
+`;
+}
+
+/* MEDICAL */
+else if(career.includes("doctor") || career.includes("medical")){
+res += `
+<b>Resources:</b><br>
+• NCERT Biology<br>
+• NEET Preparation Books<br>
+• Online Medical Journals<br>
+`;
+}
+
+/* BUSINESS */
+else if(career.includes("business") || career.includes("manager")){
+res += `
+<b>Courses:</b><br>
+• Digital Marketing<br>
+• Business Analytics<br><br>
+
+<b>Platforms:</b><br>
+• Coursera<br>
+• LinkedIn Learning<br>
+`;
+}
+
+/* DEFAULT */
+else{
+res += `
+• Improve communication skills<br>
+• Take online certifications<br>
+• Use YouTube and LinkedIn Learning<br>
+`;
+}
+
+document.getElementById("resourceResult").innerHTML = res;
+
+}
+function generateResume(){
+
+let name = document.getElementById("rname").value;
+let email = document.getElementById("remail").value;
+let phone = document.getElementById("rphone").value;
+let education = document.getElementById("reducation").value;
+let skills = document.getElementById("rskills").value;
+let projects = document.getElementById("rprojects").value;
+let experience = document.getElementById("rexperience").value;
+
+let resume = `
+<h2>${name}</h2>
+<p><b>Email:</b> ${email}</p>
+<p><b>Phone:</b> ${phone}</p>
+
+<hr>
+
+<h3>Education</h3>
+<p>${education}</p>
+
+<h3>Skills</h3>
+<p>${skills}</p>
+
+<h3>Projects</h3>
+<p>${projects}</p>
+
+<h3>Experience</h3>
+<p>${experience}</p>
+`;
+
+document.getElementById("resumeOutput").innerHTML = resume;
+
+}
+function downloadResumePDF(){
+
+const jsPDF = window.jspdf.jsPDF;
+const doc = new jsPDF();
+
+let name = document.getElementById("rname").value || "";
+let email = document.getElementById("remail").value || "";
+let phone = document.getElementById("rphone").value || "";
+let education = document.getElementById("reducation").value || "";
+let skills = document.getElementById("rskills").value || "";
+let projects = document.getElementById("rprojects").value || "";
+let experience = document.getElementById("rexperience").value || "";
+
+let y = 20;
+
+doc.setFontSize(16);
+doc.text(name, 20, y);
+
+y += 10;
+doc.setFontSize(12);
+
+// helper for long text wrapping
+function addText(title, text){
+doc.text(title, 20, y);
+y += 7;
+
+let lines = doc.splitTextToSize(text, 170);
+doc.text(lines, 20, y);
+
+y += lines.length * 7 + 5;
+}
+
+addText("Email: " + email, "");
+addText("Phone: " + phone, "");
+addText("Education:", education);
+addText("Skills:", skills);
+addText("Projects:", projects);
+addText("Experience:", experience);
+
+doc.save("resume.pdf");
+
+}
+
+function showTrendingCareers(){
+
+let result = `
+<h3>🔥 Trending Careers (2026)</h3><br>
+
+<b>1. AI Engineer</b><br>
+High demand due to AI growth<br><br>
+
+<b>2. Data Scientist</b><br>
+Data-driven decision making<br><br>
+
+<b>3. Cyber Security Expert</b><br>
+Protect systems from hacking<br><br>
+
+<b>4. Cloud Engineer</b><br>
+Works with AWS, Azure, Cloud tech<br><br>
+
+<b>5. Blockchain Developer</b><br>
+Used in crypto & secure systems<br><br>
+
+<b>6. UI/UX Designer</b><br>
+Design user-friendly apps<br><br>
+
+<b>7. Digital Marketing Specialist</b><br>
+SEO, social media, branding<br><br>
+
+<b>8. Robotics Engineer</b><br>
+Automation & robotics field<br><br>
+
+<b>9. Full Stack Developer</b><br>
+Frontend + Backend development<br><br>
+
+<b>10. Product Manager</b><br>
+Manages tech products & teams
+`;
+
+document.getElementById("trendingResult").innerHTML = result;
+
+}
+
+function analyzeSkillLevel(){
+
+let skills = document.getElementById("skills")?.value.toLowerCase() || "";
+
+let score = 0;
+
+/* BASIC CHECK */
+if(skills.includes("java") || skills.includes("python")) score += 2;
+if(skills.includes("html") || skills.includes("css") || skills.includes("javascript")) score += 2;
+if(skills.includes("sql") || skills.includes("database")) score += 1;
+if(skills.includes("machine learning") || skills.includes("ai")) score += 3;
+if(skills.includes("project")) score += 2;
+if(skills.includes("internship")) score += 2;
+
+/* LEVEL DECISION */
+let level = "";
+let message = "";
+
+if(score <= 2){
+  level = "Beginner 🟢";
+  message = "Start learning basics and build small projects.";
+}
+else if(score <= 6){
+  level = "Intermediate 🟡";
+  message = "Improve with real-world projects and internships.";
+}
+else{
+  level = "Advanced 🔴";
+  message = "You are job-ready! Focus on specialization.";
+}
+
+/* OUTPUT */
+document.getElementById("skillLevelResult").innerHTML = `
+<h3>📊 Skill Level Analysis</h3>
+<b>Your Level:</b> ${level}<br><br>
+<b>Advice:</b> ${message}
+`;
+
+}
+
+function showCompanies(){
+
+let result = `
+<h3>🏢 Top Companies Hiring (By Domain)</h3><br>
+
+<b>💻 Software / IT</b><br>
+Google, Microsoft, Amazon, Infosys, TCS, Wipro, HCL, Cognizant<br><br>
+
+<b>🤖 AI / Data Science</b><br>
+OpenAI, NVIDIA, IBM, Accenture, Meta AI, Google DeepMind<br><br>
+
+<b>☁ Cloud & DevOps</b><br>
+Amazon AWS, Microsoft Azure, Google Cloud, Oracle, Red Hat<br><br>
+
+<b>🔐 Cyber Security</b><br>
+Kaspersky, Palo Alto Networks, Cisco, FireEye, CrowdStrike<br><br>
+
+<b>💰 Finance / Banking</b><br>
+Goldman Sachs, JP Morgan, Morgan Stanley, Deloitte, EY, KPMG<br><br>
+
+<b>📊 Product-Based Companies</b><br>
+Apple, Meta, Netflix, Uber, Airbnb, Salesforce<br><br>
+
+<b>🎨 Design / Creative</b><br>
+Adobe, Canva, Pixar, DreamWorks, Byju's (Design Team)<br><br>
+
+<b>🚀 Startups (High Growth)</b><br>
+Flipkart, Swiggy, Zomato, Razorpay, Freshworks<br><br>
+
+<b>🌍 Government & Public Sector</b><br>
+ISRO, DRDO, BHEL, ONGC, Indian Railways<br><br>
+
+<b>🏥 Healthcare / Medical</b><br>
+Apollo Hospitals, Fortis, AIIMS, Cipla, Sun Pharma<br><br>
+
+<b>📌 Tips:</b><br>
+✔ Build strong projects<br>
+✔ Do internships<br>
+✔ Improve communication skills<br>
+✔ Apply through LinkedIn & company websites
+`;
+
+document.getElementById("companyResult").innerHTML = result;
+
+}
+function showJobs(){
+
+let result = `
+<h3>💼 Live Job Openings</h3><br>
+
+<b>💻 Software Engineer</b><br>
+Company: Google<br>
+Location: Bangalore<br>
+Apply: https://careers.google.com<br><br>
+
+<b>🤖 AI Engineer</b><br>
+Company: Microsoft<br>
+Location: Hyderabad<br>
+Apply: https://careers.microsoft.com<br><br>
+
+<b>📊 Data Analyst</b><br>
+Company: Amazon<br>
+Location: Chennai<br>
+Apply: https://www.amazon.jobs<br><br>
+
+<b>🔐 Cyber Security Analyst</b><br>
+Company: IBM<br>
+Location: Pune<br>
+Apply: https://www.ibm.com/careers<br><br>
+
+<b>🎨 UI/UX Designer</b><br>
+Company: Adobe<br>
+Location: Remote<br>
+Apply: https://adobe.com/careers<br><br>
+
+<b>📢 Tip:</b><br>
+✔ Keep resume updated<br>
+✔ Apply on LinkedIn, Naukri, Indeed<br>
+✔ Practice interview questions
+`;
+
+document.getElementById("jobResult").innerHTML = result;
+
+}
+function showInterviewTips(){
+
+let career = document.getElementById("career").innerText.toLowerCase();
+
+let tips = "<h3>🎯 Interview Tips</h3><br>";
+
+/* COMMON TIPS */
+tips += `
+<b>General Tips:</b><br>
+✔ Prepare your introduction (Tell me about yourself)<br>
+✔ Research the company<br>
+✔ Be confident and clear<br>
+✔ Maintain eye contact<br>
+✔ Ask questions at the end<br><br>
+`;
+
+/* SOFTWARE */
+if(career.includes("software")){
+tips += `
+<b>For Software Jobs:</b><br>
+✔ Practice Data Structures & Algorithms<br>
+✔ Revise OOP concepts<br>
+✔ Prepare coding problems (LeetCode, HackerRank)<br>
+✔ Explain your projects clearly<br>
+✔ Know Git & version control<br><br>
+`;
+}
+
+/* AI / DATA */
+if(career.includes("ai") || career.includes("data")){
+tips += `
+<b>For AI / Data Roles:</b><br>
+✔ Understand Machine Learning concepts<br>
+✔ Practice Python & libraries (Pandas, NumPy)<br>
+✔ Know real-world use cases<br>
+✔ Explain your ML projects clearly<br>
+✔ Revise statistics basics<br><br>
+`;
+}
+
+/* MEDICAL */
+if(career.includes("doctor") || career.includes("medical")){
+tips += `
+<b>For Medical Field:</b><br>
+✔ Strong subject knowledge (Biology, Medicine)<br>
+✔ Be calm and confident<br>
+✔ Show patient care attitude<br>
+✔ Be ready for practical questions<br><br>
+`;
+}
+
+/* BUSINESS */
+if(career.includes("business") || career.includes("manager")){
+tips += `
+<b>For Business Roles:</b><br>
+✔ Improve communication skills<br>
+✔ Be aware of market trends<br>
+✔ Show leadership examples<br>
+✔ Prepare case studies<br><br>
+`;
+}
+
+/* FINAL TIP */
+tips += `
+<b>Final Tip:</b><br>
+✨ Confidence + Preparation = Success<br>
+`;
+
+document.getElementById("interviewTipsResult").innerHTML = tips;
+
+}
+function motivate() {
+    const quotes = [
+      "Success comes from consistent learning.",
+      "Never stop improving your skills.",
+      "Small progress every day leads to big success.",
+      "Build projects and believe in yourself."
+    ];
+
+    // Pick a random quote
+    const random = quotes[Math.floor(Math.random() * quotes.length)];
+
+    // Show in the div
+    document.getElementById("motivation").innerText = random;
+  }
+
+</script>
+
+</body>
+</html>
