@@ -1582,16 +1582,205 @@ document.getElementById("motivation").innerHTML=random;
 }
 function searchCareer(){
 
-let career=document.getElementById("careerSearch").value.toLowerCase();
+let career = document.getElementById("careerSearch").value.toLowerCase();
+let result = "";
 
-if(career=="ai")
-document.getElementById("careerInfo").innerHTML="AI Engineers build intelligent systems.";
+if(career.includes("ai") || career.includes("artificial intelligence")){
+result = `
+<h3>AI Engineer 🤖</h3>
+Builds intelligent systems using Machine Learning and Deep Learning.<br>
+<b>Skills:</b> Python, ML, DL, Data Structures<br>
+<b>Salary:</b> ₹8L - ₹20L
+`;
+}
 
-else if(career=="doctor")
-document.getElementById("careerInfo").innerHTML="Doctors diagnose and treat diseases.";
+else if(career.includes("software") || career.includes("developer")){
+result = `
+<h3>Software Developer 💻</h3>
+Designs and develops applications and systems.<br>
+<b>Skills:</b> Java, Python, Web Development<br>
+<b>Salary:</b> ₹6L - ₹12L
+`;
+}
 
-else
-document.getElementById("careerInfo").innerHTML="Career information not found.";
+else if(career.includes("data")){
+result = `
+<h3>Data Scientist 📊</h3>
+Analyzes data to extract insights and predictions.<br>
+<b>Skills:</b> Python, SQL, Statistics<br>
+<b>Salary:</b> ₹7L - ₹18L
+`;
+}
+
+else if(career.includes("doctor") || career.includes("medical")){
+result = `
+<h3>Doctor 🏥</h3>
+Diagnoses and treats patients.<br>
+<b>Skills:</b> Biology, Medicine, Patient Care<br>
+<b>Salary:</b> ₹6L - ₹15L
+`;
+}
+
+else if(career.includes("law") || career.includes("lawyer")){
+result = `
+<h3>Lawyer ⚖️</h3>
+Provides legal advice and represents clients.<br>
+<b>Skills:</b> Legal Knowledge, Communication<br>
+<b>Salary:</b> ₹5L - ₹12L
+`;
+}
+
+else if(career.includes("business") || career.includes("manager")){
+result = `
+<h3>Business Analyst 📈</h3>
+Analyzes business processes and improves performance.<br>
+<b>Skills:</b> Analytics, Communication, Strategy<br>
+<b>Salary:</b> ₹6L - ₹14L
+`;
+}
+
+else if(career.includes("design") || career.includes("ui") || career.includes("ux")){
+result = `
+<h3>UI/UX Designer 🎨</h3>
+Designs user-friendly interfaces and experiences.<br>
+<b>Skills:</b> Figma, Creativity, Design Thinking<br>
+<b>Salary:</b> ₹5L - ₹10L
+`;
+}
+
+else if(career.includes("cyber") || career.includes("security")){
+result = `
+<h3>Cybersecurity Analyst 🔐</h3>
+Protects systems from cyber attacks.<br>
+<b>Skills:</b> Networking, Ethical Hacking, Security Tools<br>
+<b>Salary:</b> ₹6L - ₹15L
+`;
+}
+
+else if(career.includes("cloud")){
+result = `
+<h3>Cloud Engineer ☁️</h3>
+Manages cloud infrastructure and services.<br>
+<b>Skills:</b> AWS, Azure, DevOps<br>
+<b>Salary:</b> ₹8L - ₹18L
+`;
+}
+
+else if(career.includes("teacher") || career.includes("professor")){
+result = `
+<h3>Teacher / Professor 👩‍🏫</h3>
+Educates and mentors students.<br>
+<b>Skills:</b> Subject Knowledge, Communication<br>
+<b>Salary:</b> ₹3L - ₹10L
+`;
+}
+
+else{
+result = "❌ Career information not found. Try keywords like AI, Doctor, Software, Data, Business.";
+}
+
+document.getElementById("careerInfo").innerHTML = result;
+
+}function searchCareer(){
+
+let career = document.getElementById("careerSearch").value.toLowerCase();
+let result = "";
+
+if(career.includes("ai") || career.includes("artificial intelligence")){
+result = `
+<h3>AI Engineer 🤖</h3>
+Builds intelligent systems using Machine Learning and Deep Learning.<br>
+<b>Skills:</b> Python, ML, DL, Data Structures<br>
+<b>Salary:</b> ₹8L - ₹20L
+`;
+}
+
+else if(career.includes("software") || career.includes("developer")){
+result = `
+<h3>Software Developer 💻</h3>
+Designs and develops applications and systems.<br>
+<b>Skills:</b> Java, Python, Web Development<br>
+<b>Salary:</b> ₹6L - ₹12L
+`;
+}
+
+else if(career.includes("data")){
+result = `
+<h3>Data Scientist 📊</h3>
+Analyzes data to extract insights and predictions.<br>
+<b>Skills:</b> Python, SQL, Statistics<br>
+<b>Salary:</b> ₹7L - ₹18L
+`;
+}
+
+else if(career.includes("doctor") || career.includes("medical")){
+result = `
+<h3>Doctor 🏥</h3>
+Diagnoses and treats patients.<br>
+<b>Skills:</b> Biology, Medicine, Patient Care<br>
+<b>Salary:</b> ₹6L - ₹15L
+`;
+}
+
+else if(career.includes("law") || career.includes("lawyer")){
+result = `
+<h3>Lawyer ⚖️</h3>
+Provides legal advice and represents clients.<br>
+<b>Skills:</b> Legal Knowledge, Communication<br>
+<b>Salary:</b> ₹5L - ₹12L
+`;
+}
+
+else if(career.includes("business") || career.includes("manager")){
+result = `
+<h3>Business Analyst 📈</h3>
+Analyzes business processes and improves performance.<br>
+<b>Skills:</b> Analytics, Communication, Strategy<br>
+<b>Salary:</b> ₹6L - ₹14L
+`;
+}
+
+else if(career.includes("design") || career.includes("ui") || career.includes("ux")){
+result = `
+<h3>UI/UX Designer 🎨</h3>
+Designs user-friendly interfaces and experiences.<br>
+<b>Skills:</b> Figma, Creativity, Design Thinking<br>
+<b>Salary:</b> ₹5L - ₹10L
+`;
+}
+
+else if(career.includes("cyber") || career.includes("security")){
+result = `
+<h3>Cybersecurity Analyst 🔐</h3>
+Protects systems from cyber attacks.<br>
+<b>Skills:</b> Networking, Ethical Hacking, Security Tools<br>
+<b>Salary:</b> ₹6L - ₹15L
+`;
+}
+
+else if(career.includes("cloud")){
+result = `
+<h3>Cloud Engineer ☁️</h3>
+Manages cloud infrastructure and services.<br>
+<b>Skills:</b> AWS, Azure, DevOps<br>
+<b>Salary:</b> ₹8L - ₹18L
+`;
+}
+
+else if(career.includes("teacher") || career.includes("professor")){
+result = `
+<h3>Teacher / Professor 👩‍🏫</h3>
+Educates and mentors students.<br>
+<b>Skills:</b> Subject Knowledge, Communication<br>
+<b>Salary:</b> ₹3L - ₹10L
+`;
+}
+
+else{
+result = "❌ Career information not found. Try keywords like AI, Doctor, Software, Data, Business.";
+}
+
+document.getElementById("careerInfo").innerHTML = result;
 
 }
 
